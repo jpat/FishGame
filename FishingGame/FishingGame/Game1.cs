@@ -211,8 +211,8 @@ namespace FishingGame
                     break;
 
                 case(State.HighScore):
-                    if (score != 0)
-                        HighScoreMenu.scores.Add("newuser", score);
+                    //if (score != 0)
+                        //HighScoreMenu.Scores.Add("newuser", score);
                     if (keyState.IsKeyDown(Keys.X) && lastKeyState.IsKeyUp(Keys.X))
                         currentState = State.Menu;
                     break;
