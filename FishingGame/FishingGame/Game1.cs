@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System.Net;
+using System.Text;
 
 namespace FishingGame
 {
@@ -203,7 +205,10 @@ namespace FishingGame
                 case(State.InGame):
                     GameUpdate(gameTime);
                     if (lastKeyState.IsKeyUp(Keys.K) && keyState.IsKeyDown(Keys.K))
+                    {
+                        PostHighScore(score);
                         currentState = State.HighScore;
+                    }
                     break;
 
                 case(State.Pause):
@@ -211,8 +216,6 @@ namespace FishingGame
                     break;
 
                 case(State.HighScore):
-                    //if (score != 0)
-                        //HighScoreMenu.Scores.Add("newuser", score);
                     if (keyState.IsKeyDown(Keys.X) && lastKeyState.IsKeyUp(Keys.X))
                         currentState = State.Menu;
                     break;
@@ -509,6 +512,20 @@ namespace FishingGame
                     yLoc = 550;
 
                 fish.Add(new Fish(new Vector2(900, yLoc), new Vector2(-vel, 0), type, 0.5f));
+            }
+        }
+
+        private void PostHighScore(int score)
+        {
+            string url = "http://192.168.0.14/fishgame/fishpost.php";
+            using (WebClient wc = new WebClient())
+            {
+                System.Collections.Specialized.NameValueCollection values = new System.Collections.Specialized.NameValueCollection();
+                values.Add("Name", "julzcorex");
+                values.Add("Score", score.ToString());
+                var result = wc.UploadValues(url, values);
+                var returnString = Encoding.ASCII.GetString(result);
+                int u = 0;
             }
         }
     }
