@@ -18,12 +18,6 @@ namespace FishingGame
 
         public HighScoreMenu()
         {
-            //Scores = new Dictionary<string, int>() 
-            //{
-            //    {"Julz", 11101},
-            //    {"Mandz", 5293},
-            //    {"Poop", 9009}
-            //};
             Scores = GetHighScores("http://192.168.0.14/fishgame/sqlscores.php");
         }
 
@@ -40,7 +34,7 @@ namespace FishingGame
             }
         }
 
-        private Dictionary<string, int> GetHighScores(string url)
+        public Dictionary<string, int> GetHighScores(string url)
         {
             WebClient client = new WebClient();
             string reply = client.DownloadString(url);

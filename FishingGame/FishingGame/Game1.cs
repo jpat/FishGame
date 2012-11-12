@@ -27,7 +27,7 @@ namespace FishingGame
         StartMenu startMenu;
         HighScoreMenu highScoreMenu;
 
-        Texture2D menubg, hsbg;
+        Texture2D menubg, hsbg, gameoverbg;
 
         Texture2D fisher, boat, hook;
         Texture2D sky, water, sand;
@@ -164,6 +164,7 @@ namespace FishingGame
 
             menubg = Content.Load<Texture2D>("menubg");
             hsbg = Content.Load<Texture2D>("scorefiller");
+            gameoverbg = Content.Load<Texture2D>("gameover");
 
             // TODO: Get data for all fish
             /*plainfishData = new Color[plain1.Width * plain1.Height];
@@ -181,7 +182,9 @@ namespace FishingGame
         {
             KeyboardState keyState = Keyboard.GetState();
             if (keyState.IsKeyDown(Keys.Escape))
+            {
                 this.Exit();
+            }
 
             switch(currentState){
 
@@ -248,25 +251,10 @@ namespace FishingGame
                         {
                             string finalName = new string(name);
                             PostHighScore(finalName, score);
-                            //highScoreMenu.GetHighScores("http://192.168.0.14/fishgame/sqlscores.php");
+                            highScoreMenu.GetHighScores("http://192.168.0.14/fishgame/sqlscores.php");
                             currentState = State.HighScore;
                         }
                     }
-
-                    /*string finalName = new string(name);
-                    Console.WriteLine(finalName);*/
-                        
-
-                    /*while (!keyState.IsKeyDown(Keys.Enter))
-                    {
-                        foreach (Keys key in keyState.GetPressedKeys())
-                        {
-                            name += key.ToString();
-                            Console.WriteLine(name);
-                        }
-                        lastKeyState = keyState;
-                    }
-                    currentState = State.HighScore;*/
                     break;
 
                 case(State.Pause):
@@ -479,8 +467,10 @@ namespace FishingGame
                     break;
 
                 case(State.Name):
+
+                    spriteBatch.Draw(gameoverbg, screenRect, Color.White);
                     string finalName = new string(name);
-                    spriteBatch.DrawString(roundedFont, finalName, new Vector2(screenWidth / 2, screenHeight / 2), Color.White);
+                    spriteBatch.DrawString(roundedFont, finalName, new Vector2(550, 200), Color.Black);
                     break;
 
                     
