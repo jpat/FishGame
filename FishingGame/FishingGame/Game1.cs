@@ -21,7 +21,7 @@ namespace FishingGame
 
         public static SpriteFont font, roundedFont;
 
-        enum State { Menu, InGame, Pause, HighScore, GameOver };
+        enum State { Menu, InGame, Pause, HighScore, GameOver, Name };
         State currentState;
 
         StartMenu startMenu;
@@ -59,6 +59,8 @@ namespace FishingGame
         List<Fish> fish;
 
         public KeyboardState lastKeyState;
+        char[] name = { 'A', 'A', 'A' };
+        int nameIndex = 0;
 
         public Game1()
         {
@@ -179,7 +181,7 @@ namespace FishingGame
         {
             KeyboardState keyState = Keyboard.GetState();
             if (keyState.IsKeyDown(Keys.Escape))
-            this.Exit();
+                this.Exit();
 
             switch(currentState){
 
@@ -206,9 +208,65 @@ namespace FishingGame
                     GameUpdate(gameTime);
                     if (lastKeyState.IsKeyUp(Keys.K) && keyState.IsKeyDown(Keys.K))
                     {
-                        PostHighScore(score);
-                        currentState = State.HighScore;
+                        currentState = State.Name;
+                        //PostHighScore(score);
+                        //currentState = State.HighScore;
                     }
+                    break;
+
+                case(State.Name):
+
+                    if (keyState.IsKeyDown(Keys.Down) && lastKeyState.IsKeyUp(Keys.Down))
+                    {
+                        if (name[nameIndex] >= 'Z')
+                        {
+                            name[nameIndex] = 'A';
+                        }
+                        else
+                        {
+                            name[nameIndex]++;
+                        }
+                    }
+                    if (keyState.IsKeyDown(Keys.Up) && lastKeyState.IsKeyUp(Keys.Up))
+                    {
+                        if (name[nameIndex] <= 'A')
+                        {
+                            name[nameIndex] = 'Z';
+                        }
+                        else
+                        {
+                            name[nameIndex]--;
+                        }
+                    }
+                    if (keyState.IsKeyDown(Keys.Enter) && lastKeyState.IsKeyUp(Keys.Enter))
+                    {
+                        if (nameIndex < 2)
+                        {
+                            nameIndex++;
+                        }
+                        else
+                        {
+                            string finalName = new string(name);
+                            PostHighScore(finalName, score);
+                            //highScoreMenu.GetHighScores("http://192.168.0.14/fishgame/sqlscores.php");
+                            currentState = State.HighScore;
+                        }
+                    }
+
+                    /*string finalName = new string(name);
+                    Console.WriteLine(finalName);*/
+                        
+
+                    /*while (!keyState.IsKeyDown(Keys.Enter))
+                    {
+                        foreach (Keys key in keyState.GetPressedKeys())
+                        {
+                            name += key.ToString();
+                            Console.WriteLine(name);
+                        }
+                        lastKeyState = keyState;
+                    }
+                    currentState = State.HighScore;*/
                     break;
 
                 case(State.Pause):
@@ -420,6 +478,11 @@ namespace FishingGame
                    
                     break;
 
+                case(State.Name):
+                    string finalName = new string(name);
+                    spriteBatch.DrawString(roundedFont, finalName, new Vector2(screenWidth / 2, screenHeight / 2), Color.White);
+                    break;
+
                     
 
                 case(State.HighScore):
@@ -515,17 +578,16 @@ namespace FishingGame
             }
         }
 
-        private void PostHighScore(int score)
+        private void PostHighScore(string name, int score)
         {
             string url = "http://192.168.0.14/fishgame/fishpost.php";
             using (WebClient wc = new WebClient())
             {
                 System.Collections.Specialized.NameValueCollection values = new System.Collections.Specialized.NameValueCollection();
-                values.Add("Name", "julzcorex");
+                values.Add("Name", name);
                 values.Add("Score", score.ToString());
                 var result = wc.UploadValues(url, values);
                 var returnString = Encoding.ASCII.GetString(result);
-                int u = 0;
             }
         }
     }

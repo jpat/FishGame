@@ -24,7 +24,7 @@ namespace FishingGame
             //    {"Mandz", 5293},
             //    {"Poop", 9009}
             //};
-            Scores = GetHighScores("http://192.168.0.14/fishgame/fish.php");
+            Scores = GetHighScores("http://192.168.0.14/fishgame/sqlscores.php");
         }
 
         public void Draw(SpriteBatch spriteBatch)
