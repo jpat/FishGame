@@ -7,7 +7,7 @@
     <ProjectGuid>{4D0539F7-7E7D-4989-95F4-536867DB2D62}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FishingGame</RootNamespace>
+    <RootNamespace>FishGameMono</RootNamespace>
     <AssemblyName>FishGameMono</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>

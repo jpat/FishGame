@@ -9,7 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.IO;
 
-namespace FishingGame
+namespace FishGameMono
 {
     class HighScoreMenu
     {

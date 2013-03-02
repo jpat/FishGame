@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FishingGame
+namespace FishGameMono
 {
     /// <summary>
     /// The main class.

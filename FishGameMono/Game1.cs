@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 using System.Net;
 using System.Text;
 
-namespace FishingGame
+namespace FishGameMono
 {
 
     public class Game1 : Microsoft.Xna.Framework.Game
