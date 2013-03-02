@@ -292,7 +292,7 @@ namespace FishGameMono
 
             foreach (Fish f in fish)
             {
-                f.Update();
+                f.Update(gameTime);
                 if (BoxCollision(f.location, f.text.Width, f.text.Height, f.scale))
                 {
                     /*if (IntersectPixels(new Rectangle(hookX, hookY, (int)(hook.Width * hookScale), (int)(hook.Height * hookScale)), hookData,
