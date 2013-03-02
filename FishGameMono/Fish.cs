@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace FishGameMono
 {
-    class Fish
+    class Fish : GameObject
     {
         public enum FishType { jelly, pointy, plain, crab, boot };
         public static Dictionary<FishType, Texture2D[]> textures;
@@ -45,9 +45,7 @@ namespace FishGameMono
 
         }
 
-       
-
-        public void Update()
+        public override void Update(GameTime gameTime)
         {
             rect = new Rectangle((int)location.X, (int)location.Y, text.Width, text.Height);
             location += velocity;
@@ -78,7 +76,7 @@ namespace FishGameMono
             return location.Y <= 130;
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch sb)
+        public override void Draw(GameTime gameTime, SpriteBatch sb)
         {
             Texture2D currentTexture;
             if (textures[type].Count() == 2)
