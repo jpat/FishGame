@@ -37,71 +37,51 @@ namespace FishGameMono
         
         public override void Update(GameTime gameTime)
         {
-            GameUpdate(gameTime);
-
             KeyboardState keyState = Keyboard.GetState();
             if (lastKeyState.IsKeyUp(Keys.K) && keyState.IsKeyDown(Keys.K))
             {
                 currentState = State.GameOverName;
             }
-        }
-
-        public void GameUpdate(GameTime gameTime)
-        {
 
             if (ShouldCreateNewFish())
             {
                 fish.Add(Fish.CreateRandomFish());
             }
 
+            UpdateFish(gameTime);
+
+            boat.Update(gameTime);
+        }
+
+        private void UpdateFish(GameTime gameTime)
+        {
             foreach (Fish f in fish)
             {
                 f.Update(gameTime);
+
                 if (BoxCollision(f, boat))
                 {
-                    /*if (IntersectPixels(new Rectangle(hookX, hookY, (int)(hook.Width * hookScale), (int)(hook.Height * hookScale)), hookData,
-                        new Rectangle((int)f.location.X, (int)f.location.Y, (int)(f.text.Width * f.scale), (int)(f.text.Height * f.scale)), f.data.colorData[0]))
-                    {*/
-
                     boat.isLineFull = true;
                     f.velocity = new Vector2(0.0f, -2.0f);
                     f.isCaught = true;
                     f.rotation = (float)(90 * Math.PI / 180);
-
-                    // }
                 }
 
                 if (f.AtBoat())
                 {
-                    switch (f.type)
-                    {
-                        case (Fish.FishType.Plain):
-                            score += 100;
-                            break;
-                        case (Fish.FishType.Pointy):
-                            score += 200;
-                            break;
-                        case (Fish.FishType.Jelly):
-                            score += 500;
-                            break;
-                        case (Fish.FishType.Crab):
-                            score += 1000;
-                            break;
-                        case (Fish.FishType.Boot):
-                            score -= 500;
-                            break;
-                    }
+                    score += f.score;  
                 }
             }
 
+            // have to use indexing; can't modify collection within foreach
             for (int i = fish.Count - 1; i >= 0; i--)
             {
                 Fish f = fish.ElementAt(i);
-                if (f.IsOffScreen())
-                    fish.Remove(fish.ElementAt(i));
+                 if (f.IsOffScreen())
+                 {
+                     fish.Remove(fish.ElementAt(i));
+                }
             }
-
-            boat.Update(gameTime);
         }
 
         private bool ShouldCreateNewFish()
@@ -131,14 +111,14 @@ namespace FishGameMono
             boat.Draw(gameTime, spriteBatch);
 
             foreach (Kelp k in kelp)
-                    {
-                        k.Draw(gameTime, spriteBatch);
-                    }
+            {
+                k.Draw(gameTime, spriteBatch);
+            }
 
-                    foreach (Fish f in fish)
-                    {
-                        f.Draw(gameTime, spriteBatch);
-                    }
+            foreach (Fish f in fish)
+            {
+                f.Draw(gameTime, spriteBatch);
+            }
                     
         }
 

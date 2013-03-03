@@ -25,7 +25,7 @@ namespace FishGameMono
             {
                 {"Julz", 11101},
                 {"Mandz", 5293},
-                {"Poop", 9009}
+                {"Blub", 8708}
            };
 
         }

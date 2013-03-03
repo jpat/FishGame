@@ -14,8 +14,16 @@ namespace FishGameMono
 
         public enum FishType { Jelly, Pointy, Plain, Crab, Boot };
         public static Dictionary<FishType, Sprite> sprites;
+        public static Dictionary<FishType, int> scores = new Dictionary<FishType,int> {
+            { FishType.Plain, 100 }, 
+            { FishType.Pointy, 200 },
+            { FishType.Jelly, 500 },
+            { FishType.Crab, 1000 },
+            { FishType.Boot, -500 },
+        };
 
         public FishType type;
+        public int score;
 
         public Vector2 location;
         public Vector2 velocity;
@@ -32,6 +40,7 @@ namespace FishGameMono
             this.scale = s;
             this.isCaught = false;
             this.type = f;
+            this.score = scores[type];
 
             var text = sprites[f].GetCurrentFrame(new GameTime());
 
@@ -86,7 +95,7 @@ namespace FishGameMono
             if (
                 (velocity.X < 0 && location.X < -100) ||
                     (velocity.X > 0 && location.X > Game1.screenWidth) ||
-                AtBoat()//(location.Y < 120)
+                AtBoat()
                 )
                 return true;
             else return false;

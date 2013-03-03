@@ -20,8 +20,9 @@ namespace FishGameMono
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public static int screenWidth = 800;
-        public static int screenHeight = 600;
+        public static int screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+        public static int screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+        public static Rectangle screenRect;
 
         State currentState;
 
@@ -34,14 +35,11 @@ namespace FishGameMono
         HighScoreScreen highScores;
         InGameScreen inGameScreen;
 
-        
-
-        public static Rectangle screenRect;
-
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            graphics.IsFullScreen = false;
+            //screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            //screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             Content.RootDirectory = "Content";
 
             graphics.PreferredBackBufferHeight = screenHeight;
@@ -117,22 +115,22 @@ namespace FishGameMono
                 {
                     Kelp.KelpType.Multi, new Sprite(new[]
                                                 {
-                                                    Content.Load<Texture2D>("bigkelp1"),
-                                                    Content.Load<Texture2D>("bigkelp2"),
-                                                    Content.Load<Texture2D>("bigkelp3"),
+                                                    Content.Load<Texture2D>("bigkelp1_m"),
+                                                    Content.Load<Texture2D>("bigkelp2_m"),
+                                                    Content.Load<Texture2D>("bigkelp3_m"),
                                                 })
                 }
             };
 
             BoatFisherHook.boatText = Content.Load<Texture2D>("ship");
-            BoatFisherHook.fisherText = Content.Load<Texture2D>("fisher");
-            BoatFisherHook.hookText = Content.Load<Texture2D>("hook");
+            BoatFisherHook.fisherText = Content.Load<Texture2D>("fisher_m");
+            BoatFisherHook.hookText = Content.Load<Texture2D>("hook_m");
             BoatFisherHook.lineText = Content.Load<Texture2D>("pixel");
             
             InGameScreen.sky = Content.Load<Texture2D>("sky");
             InGameScreen.water = Content.Load<Texture2D>("water");
-            InGameScreen.sand = Content.Load<Texture2D>("sand2");
-            InGameScreen.coral = Content.Load<Texture2D>("coral");
+            InGameScreen.sand = Content.Load<Texture2D>("sand1024");
+            InGameScreen.coral = Content.Load<Texture2D>("coral1024");
 
             menu = new MenuScreen(roundedFont);
             gameOver = new GameOverNameScreen();
@@ -189,6 +187,7 @@ namespace FishGameMono
                     break;
                     
             }
+
             lastKeyState = keyState;
 
             base.Update(gameTime);
