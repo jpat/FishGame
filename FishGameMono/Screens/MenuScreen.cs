@@ -1,16 +1,21 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using System.Threading.Tasks;
 
 namespace FishGameMono
 {
-    class StartMenu
+    class MenuScreen : GameScreen
     {
-        string[] menuItems = {"Play", "View High Scores", "Quit"};
+        private int selected;
+        public State currentState;
+        public static Texture2D menubg;
+
+        string[] menuItems = { "Play", "View High Scores", "Quit" };
 
         Color normalColor = Color.White;
         Color hilightColor = Color.Black;
@@ -20,14 +25,12 @@ namespace FishGameMono
         int xOffset = 535;
         int yOffset = 215;
 
-        public int selected;
-
-        public StartMenu(SpriteFont _font)
+        public MenuScreen(SpriteFont _font)
         {
             font = _font;
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             KeyboardState currentKeyState = Keyboard.GetState();
 
@@ -45,11 +48,29 @@ namespace FishGameMono
                     selected = 0;
             }
 
+            if (currentKeyState.IsKeyDown(Keys.Enter))
+            {
+                switch (selected)
+                {
+                    case (0):
+                        currentState = State.InGame;
+                        break;
+                    case (1):
+                        currentState = State.HighScore;
+                        break;
+                    case (2):
+                        currentState = State.Exiting;
+                        break;
+                }
+            }
+
             lastKeyState = currentKeyState;
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime, SpriteBatch sb)
         {
+            sb.Draw(menubg, Game1.screenRect, Color.White);
+
             for (int i = 0; i < menuItems.Length; i++)
             {
                 double width = font.MeasureString(menuItems[i]).X;
@@ -59,11 +80,9 @@ namespace FishGameMono
                 else currentColor = normalColor;
 
                 Vector2 location = new Vector2((float)xOffset, (float)(yOffset + i * height));
-                spriteBatch.DrawString(font, menuItems[i], location, currentColor);
+                sb.DrawString(font, menuItems[i], location, currentColor);
             }
         }
-
-
 
     }
 }

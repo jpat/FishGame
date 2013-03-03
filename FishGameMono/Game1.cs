@@ -13,6 +13,7 @@ using System.Text;
 
 namespace FishGameMono
 {
+    public enum State { Menu, InGame, Pause, HighScore, GameOver, Name, Exiting }
 
     public class Game1 : Microsoft.Xna.Framework.Game
     {
@@ -24,15 +25,13 @@ namespace FishGameMono
 
         public static int score;
 
-        enum State { Menu, InGame, Pause, HighScore, GameOver, Name };
         State currentState;
 
-        StartMenu startMenu;
         HighScoreMenu highScoreMenu;
 
         public static SpriteFont font, roundedFont;
 
-        Texture2D menubg, hsbg, gameoverbg;
+        Texture2D hsbg, gameoverbg;
 
         Texture2D fisher, boat, hook;
         Texture2D sky, water, sand, coral;
@@ -58,6 +57,10 @@ namespace FishGameMono
         public KeyboardState lastKeyState;
         char[] name = { 'A', 'A', 'A' };
         int nameIndex = 0;
+
+        MenuScreen menu;
+
+        public static Rectangle screenRect;
 
         public Game1()
         {
@@ -169,10 +172,10 @@ namespace FishGameMono
             hookData = new Color[hook.Width * hook.Height];
             hook.GetData(hookData);
 
-            startMenu = new StartMenu(roundedFont);
+            menu = new MenuScreen(roundedFont);
             highScoreMenu = new HighScoreMenu();
 
-            menubg = Content.Load<Texture2D>("menubg");
+            MenuScreen.menubg = Content.Load<Texture2D>("menubg");
             hsbg = Content.Load<Texture2D>("scorefiller");
             gameoverbg = Content.Load<Texture2D>("gameover");
 
@@ -192,25 +195,11 @@ namespace FishGameMono
                 this.Exit();
             }
 
-            switch(currentState){
-
+            switch (currentState)
+            {
                 case(State.Menu):
-                    startMenu.Update(gameTime);
-                    if (keyState.IsKeyDown(Keys.Enter))
-                    {
-                        switch (startMenu.selected)
-                        {
-                            case(0):
-                                currentState = State.InGame;
-                                break;
-                            case(1):
-                                currentState = State.HighScore;
-                                break;
-                            case(2):
-                                this.Exit();
-                                break;
-                        }
-                    }
+                    menu.Update(gameTime);
+                    currentState = menu.currentState;
                     break;
 
                 case(State.InGame):
@@ -268,6 +257,10 @@ namespace FishGameMono
                 case(State.HighScore):
                     if (keyState.IsKeyDown(Keys.X) && lastKeyState.IsKeyUp(Keys.X))
                         currentState = State.Menu;
+                    break;
+
+                case(State.Exiting):
+                    this.Exit();
                     break;
                     
             }
@@ -433,16 +426,13 @@ namespace FishGameMono
 
         protected override void Draw(GameTime gameTime)
         {
-            
-            Rectangle screenRect = new Rectangle(0, 0, screenWidth, screenHeight);
+            screenRect = new Rectangle(0, 0, screenWidth, screenHeight);
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
 
             switch(currentState){
                 case(State.Menu):
-
-                    spriteBatch.Draw(menubg, screenRect, Color.White);
-                    startMenu.Draw(gameTime, spriteBatch);
+                    menu.Draw(gameTime, spriteBatch);
                     break;
 
                 case(State.InGame):
