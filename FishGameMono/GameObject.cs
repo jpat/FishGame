@@ -7,9 +7,10 @@ using System.Text;
 
 namespace FishGameMono
 {
-    abstract class GameObject
+    public abstract class GameObject
     {
-        public abstract void Draw(GameTime gameTime, SpriteBatch sb);
+        public Rectangle rect;
+        public abstract void Draw(GameTime gameTime, SpriteBatch spriteBatch);
         public abstract void Update(GameTime gameTime);
     }
 }

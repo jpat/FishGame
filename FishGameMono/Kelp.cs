@@ -17,6 +17,7 @@ namespace FishGameMono
         public Vector2 location;
         public float alpha;
         public float scale;
+        
 
         public Kelp(KelpType _type, Vector2 _loc, float _alpha, float _scale)
         {

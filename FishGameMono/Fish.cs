@@ -15,8 +15,6 @@ namespace FishGameMono
         public enum FishType { Jelly, Pointy, Plain, Crab, Boot };
         public static Dictionary<FishType, Sprite> sprites;
 
-        public Rectangle rect;
-
         public FishType type;
 
         public Vector2 location;
@@ -37,7 +35,7 @@ namespace FishGameMono
 
             var text = sprites[f].GetCurrentFrame(new GameTime());
 
-            rect = new Rectangle((int)location.X, (int)location.Y, text.Width, text.Height);
+            rect = new Rectangle((int)location.X, (int)location.Y, (int)(text.Width * scale), (int)(text.Height * scale));
         }
 
         public static Fish CreateRandomFish()
@@ -70,7 +68,7 @@ namespace FishGameMono
 
         public override void Update(GameTime gameTime)
         {
-            rect = new Rectangle((int)location.X, (int)location.Y, rect.Width, rect.Height);
+            rect = new Rectangle((int)location.X, (int)location.Y, (int)(rect.Width * scale), (int)(rect.Height * scale));
             location += velocity;
 
             if (this.isCaught == true)

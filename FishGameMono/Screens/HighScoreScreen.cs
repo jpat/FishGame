@@ -16,8 +16,10 @@ namespace FishGameMono
         public static Texture2D highScoreBG;
         private int yOffset = 200;
 
+
         public HighScoreScreen()
         {
+            currentState = State.HighScores;
             //Scores = GetHighScores("http://192.168.0.14/fishgame/sqlscores.php");
             Scores = new Dictionary<string, int>() 
             {

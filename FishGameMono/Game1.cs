@@ -29,22 +29,7 @@ namespace FishGameMono
 
         public static SpriteFont font, roundedFont;
 
-        Texture2D fisher, boat, hook;
         Texture2D sky, water, sand, coral;
-        Texture2D pixel;
-
-        Color[] hookData;
-
-        int boatX;
-        int lineLength;
-        Vector2 lineOffset, hookOffset;
-        bool isLowering, lineFull;
-
-        int hookX, hookY;
-        float hookScale;
-
-        public float boatRotation = 0.0f;
-        public float rotDirection = 1;
 
         List<Fish> fish;
         List<Kelp> kelp;
@@ -54,6 +39,8 @@ namespace FishGameMono
         MenuScreen menu;
         GameOverNameScreen gameOver;
         HighScoreScreen highScores;
+
+        BoatFisherHook boat;
 
         public static Rectangle screenRect;
 
@@ -70,20 +57,8 @@ namespace FishGameMono
         protected override void Initialize()
         {
             currentState = State.Menu;
+            screenRect = new Rectangle(0, 0, screenWidth, screenHeight);
 
-            lineLength = 10;
-            hookScale = 0.5f;
-            boatX = (int)(screenWidth * 0.5);
-            lineOffset = new Vector2(80, 100);
-
-            //hookX = boatX + 67;
-            hookOffset = new Vector2(67, 110);
-            hookX = (int)hookOffset.X + boatX;
-            hookY = (int)lineOffset.Y + lineLength;
-            //hookY = 110 + lineLength;
-
-            isLowering = false;
-            lineFull = false;
             fish = new List<Fish>();
             kelp = new List<Kelp>
             {
@@ -99,12 +74,10 @@ namespace FishGameMono
 
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             font = Content.Load<SpriteFont>("font");
             roundedFont = Content.Load<SpriteFont>("roundedFont");
-
             
             Fish.sprites = new Dictionary<Fish.FishType, Sprite>
             {
@@ -167,18 +140,15 @@ namespace FishGameMono
                 }
             };
 
-            fisher = Content.Load<Texture2D>("fisher");
-            boat = Content.Load<Texture2D>("ship");
+            BoatFisherHook.boatText = Content.Load<Texture2D>("ship");
+            BoatFisherHook.fisherText = Content.Load<Texture2D>("fisher");
+            BoatFisherHook.hookText = Content.Load<Texture2D>("hook");
+            BoatFisherHook.lineText = Content.Load<Texture2D>("pixel");
+            
             sky = Content.Load<Texture2D>("sky");
             water = Content.Load<Texture2D>("water");
             sand = Content.Load<Texture2D>("sand2");
             coral = Content.Load<Texture2D>("coral");
-            hook = Content.Load<Texture2D>("hook");
-
-            pixel = Content.Load<Texture2D>("pixel");
-
-            hookData = new Color[hook.Width * hook.Height];
-            hook.GetData(hookData);
 
             menu = new MenuScreen(roundedFont);
             gameOver = new GameOverNameScreen();
@@ -187,9 +157,9 @@ namespace FishGameMono
             MenuScreen.menuBG = Content.Load<Texture2D>("menubg");
             GameOverNameScreen.gameOverBG = Content.Load<Texture2D>("gameover");
             HighScoreScreen.highScoreBG = Content.Load<Texture2D>("scorefiller");
+            boat = new BoatFisherHook();
 
         }
-
 
         protected override void UnloadContent()
         {
@@ -245,29 +215,22 @@ namespace FishGameMono
 
         public void GameUpdate(GameTime gameTime)
         {
-            boatRotation += (float)(rotDirection * Math.PI / 180);
-            if ((boatRotation * Math.PI / 180) > 3.0f || (boatRotation * Math.PI / 180) < -3.0f)
-                rotDirection *= -1;
-
+            
             if (ShouldCreateNewFish())
             {
                 fish.Add(Fish.CreateRandomFish());
             }
 
-            UpdateBoat();
-            CheckLine();
-            UpdateLine();
-
             foreach (Fish f in fish)
             {
                 f.Update(gameTime);
-                if (BoxCollision(f.location, f.rect.Width, f.rect.Height, f.scale))
+                if (BoxCollision(f, boat))
                 {
                     /*if (IntersectPixels(new Rectangle(hookX, hookY, (int)(hook.Width * hookScale), (int)(hook.Height * hookScale)), hookData,
                         new Rectangle((int)f.location.X, (int)f.location.Y, (int)(f.text.Width * f.scale), (int)(f.text.Height * f.scale)), f.data.colorData[0]))
                     {*/
 
-                        lineFull = true;
+                        boat.isLineFull = true;
                         f.velocity = new Vector2(0.0f, -2.0f);
                         f.isCaught = true;
                         f.rotation = (float)(90 * Math.PI / 180);
@@ -304,67 +267,20 @@ namespace FishGameMono
                 if (f.IsOffScreen())
                     fish.Remove(fish.ElementAt(i));
             }
+
+            boat.Update(gameTime);
         }
 
-        public void UpdateBoat()
+        public static bool BoxCollision(GameObject obj1, GameObject obj2)
         {
-            KeyboardState keyState = Keyboard.GetState();
-            if (keyState.IsKeyDown(Keys.Left))
-            {
-                boatX -= 3;
-                hookX -= 3;
-            }
-            else if (keyState.IsKeyDown(Keys.Right))
-            {
-                boatX += 3;
-                hookX += 3;
-            }
-        }
-
-        public void CheckLine()
-        {
-            KeyboardState keyState = Keyboard.GetState();
-            if (keyState.IsKeyDown(Keys.Space))
-                isLowering = true;
-        }
-
-        public void UpdateLine()
-        {
-            if (lineLength < (screenHeight - 2 * hook.Height) && isLowering)
-            {
-                lineLength += 2;
-                hookY += 2;
-            }
-
-            if (lineLength >= (screenHeight - 2 * hook.Height) || lineFull)
-                isLowering = false;
-
-            if (lineLength > 10 && !isLowering)
-            {
-                lineLength -= 2;
-                hookY -= 2;
-            }
-
-            if (lineFull && lineLength <= 10)
-                lineFull = false;
-
-        }
-
-        //rectangle collision
-        public bool BoxCollision(Vector2 vec, int width, int height, float scale2)
-        {
-            Rectangle hookRect = new Rectangle(hookX, hookY+20, (int)(hook.Width * hookScale), (int)(hook.Height * hookScale)-20);
-            Rectangle otherRect = new Rectangle((int)vec.X+5, (int)vec.Y+5, (int)(width * scale2)-5, (int)(height * scale2)-5);
-
-            if (hookRect.Intersects(otherRect))
+            if (obj1.rect.Intersects(obj2.rect))
             {
                 return true;
             }
-
             else return false;
         }
 
-        static bool IntersectPixels(Rectangle rectangleA, Color[] dataA,
+        /*static bool IntersectPixels(Rectangle rectangleA, Color[] dataA,
                                     Rectangle rectangleB, Color[] dataB)
         {
             // Find the bounds of the rectangle intersection
@@ -396,11 +312,10 @@ namespace FishGameMono
 
             // No intersection found
             return false;
-        }
+        }*/
 
         protected override void Draw(GameTime gameTime)
         {
-            screenRect = new Rectangle(0, 0, screenWidth, screenHeight);
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
 
@@ -412,18 +327,13 @@ namespace FishGameMono
                 case(State.InGame):
 
                     spriteBatch.Draw(sky, new Vector2(0, -100), Color.White);
-
                     spriteBatch.DrawString(roundedFont, "Score: " + score, new Vector2(10.0f, 25.0f), Color.DarkMagenta);
 
                     spriteBatch.Draw(water, new Vector2(0, 200), Color.White);
                     spriteBatch.Draw(coral, new Vector2(0, 200), new Color(200,200,200,200));
                     spriteBatch.Draw(sand, new Vector2(0, screenHeight - sand.Height), Color.White);
 
-                    spriteBatch.Draw(fisher, new Vector2(boatX - 30, 100), null, Color.White, 0.05f * (float)Math.Cos(boatRotation), new Vector2(0, 0), 0.3f, SpriteEffects.None, 0);
-                    spriteBatch.Draw(boat, new Vector2(boatX, 190), null, Color.White, 0.08f*(float)Math.Cos(boatRotation), new Vector2(boat.Width/2, boat.Height/2),0.6f,SpriteEffects.None, 0 );
-
-                    spriteBatch.Draw(pixel, new Vector2(boatX + lineOffset.X, lineOffset.Y), null, Color.White, 0.0f, new Vector2(0, 0), new Vector2(1, lineLength), SpriteEffects.None, 0);
-                    spriteBatch.Draw(hook, new Vector2(hookX, hookY), null, Color.White, 0.0f, new Vector2(0, 0), hookScale, SpriteEffects.None, 0);
+                    boat.Draw(gameTime, spriteBatch);
 
                     foreach (Kelp k in kelp)
                     {

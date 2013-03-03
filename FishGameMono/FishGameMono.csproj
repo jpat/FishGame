@@ -127,6 +127,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BoatFisherHook.cs" />
     <Compile Include="Fish.cs" />
     <Compile Include="FishData.cs" />
     <Compile Include="Game1.cs" />
