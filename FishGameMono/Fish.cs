@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -13,7 +12,7 @@ namespace FishGameMono
     {
         public int ScoreValue { get; set; }
 
-        public enum FishType { jelly, pointy, plain, crab, boot };
+        public enum FishType { Jelly, Pointy, Plain, Crab, Boot };
         public static Dictionary<FishType, Sprite> sprites;
 
         public Rectangle rect;
@@ -35,11 +34,38 @@ namespace FishGameMono
             this.scale = s;
             this.isCaught = false;
             this.type = f;
-            
+
             var text = sprites[f].GetCurrentFrame(new GameTime());
 
             rect = new Rectangle((int)location.X, (int)location.Y, text.Width, text.Height);
+        }
 
+        public static Fish CreateRandomFish()
+        {
+            Random r = new Random();
+            Fish.FishType type;
+            int randomType = r.Next(0,150);
+            int yLoc;
+
+            if (randomType < 20)
+                type = Fish.FishType.Boot;
+            else if (randomType < 60)
+                type = Fish.FishType.Plain;
+            else if (randomType < 80)
+                type = Fish.FishType.Pointy;
+            else if (randomType < 120)
+                type = Fish.FishType.Jelly;
+            else
+                type = Fish.FishType.Crab;
+
+            int randomY = r.Next(300,500);
+            int vel;
+
+            vel = (type != FishType.Boot) ? r.Next(1, 4) : 1;
+
+            yLoc = (type != Fish.FishType.Crab) ? randomY : 550;
+
+            return new Fish(new Vector2(900, yLoc), new Vector2(-vel, 0), type, 0.5f);
         }
 
         public override void Update(GameTime gameTime)

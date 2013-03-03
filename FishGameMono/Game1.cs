@@ -110,7 +110,7 @@ namespace FishGameMono
             Fish.sprites = new Dictionary<Fish.FishType, Sprite>
             {
                 {
-                    Fish.FishType.jelly, new Sprite(new[]
+                    Fish.FishType.Jelly, new Sprite(new[]
                                                 {
                                                     Content.Load<Texture2D>("jelly"),
                                                     Content.Load<Texture2D>("jelly2a"),
@@ -118,27 +118,27 @@ namespace FishGameMono
                                                 })
                 },
                 {
-                    Fish.FishType.plain, new Sprite(new[]
+                    Fish.FishType.Plain, new Sprite(new[]
                                                 {
                                                     Content.Load<Texture2D>("plainfish"),
                                                     Content.Load<Texture2D>("plainfish2b"),
                                                 })
                 },
                 {
-                    Fish.FishType.pointy, new Sprite(new[]
+                    Fish.FishType.Pointy, new Sprite(new[]
                                                 {
                                                     Content.Load<Texture2D>("pointyfish"),
                                                     Content.Load<Texture2D>("pointyfish2"),
                                                 })
                 },
                 {
-                    Fish.FishType.boot, new Sprite(new[]
+                    Fish.FishType.Boot, new Sprite(new[]
                                             {
                                                 Content.Load<Texture2D>("boot")
                                             })
                 },
                 {
-                    Fish.FishType.crab, new Sprite(new[]
+                    Fish.FishType.Crab, new Sprite(new[]
                                                 {
                                                     Content.Load<Texture2D>("crab"),
                                                     Content.Load<Texture2D>("crab2"),
@@ -285,7 +285,10 @@ namespace FishGameMono
             if ((boatRotation * Math.PI / 180) > 3.0f || (boatRotation * Math.PI / 180) < -3.0f)
                 rotDirection *= -1;
 
-            RandomFish(gameTime);
+            if (ShouldCreateNewFish())
+            {
+                fish.Add(Fish.CreateRandomFish());
+            }
 
             UpdateBoat();
             CheckLine();
@@ -312,19 +315,19 @@ namespace FishGameMono
                 {
                     switch (f.type)
                     {
-                        case (Fish.FishType.plain):
+                        case (Fish.FishType.Plain):
                             score += 100;
                             break;
-                        case (Fish.FishType.pointy):
+                        case (Fish.FishType.Pointy):
                             score += 200;
                             break;
-                        case (Fish.FishType.jelly):
+                        case (Fish.FishType.Jelly):
                             score += 500;
                             break;
-                        case (Fish.FishType.crab):
+                        case (Fish.FishType.Crab):
                             score += 1000;
                             break;
-                        case (Fish.FishType.boot):
+                        case (Fish.FishType.Boot):
                             score -= 500;
                             break;
                     }
@@ -507,41 +510,10 @@ namespace FishGameMono
             spriteBatch.Draw(texts[textIndex], location, null, new Color(1.0f, 1.0f, 1.0f, alpha), 0.0f, new Vector2(0,0), scale, SpriteEffects.None, 0);
         }
 
-        public void RandomFish(GameTime gameTime)
+        private bool ShouldCreateNewFish()
         {
             Random r = new Random();
-            if (r.Next(0,1000) % 499 == 0)
-            {
-                Fish.FishType type;
-                int randomType = r.Next(0,150);
-                int yLoc;
-
-                if (randomType < 20)
-                    type = Fish.FishType.boot;
-                else if (randomType < 60)
-                    type = Fish.FishType.plain;
-                else if (randomType < 80)
-                    type = Fish.FishType.pointy;
-                else if (randomType < 120)
-                    type = Fish.FishType.jelly;
-                else
-                    type = Fish.FishType.crab;
-
-                int randomY = r.Next(300,500);
-                int vel;
-
-                if (type != Fish.FishType.boot)
-                    vel = r.Next(1, 4);
-                else vel = 1;
-
-                if (type != Fish.FishType.crab)
-                    yLoc = randomY;
-
-                else
-                    yLoc = 550;
-
-                fish.Add(new Fish(new Vector2(900, yLoc), new Vector2(-vel, 0), type, 0.5f));
-            }
+            return r.Next(0, 1000) % 499 == 0;
         }
 
         /*private void PostHighScore(string name, int score)
