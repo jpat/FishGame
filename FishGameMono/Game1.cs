@@ -13,7 +13,7 @@ using System.Text;
 
 namespace FishGameMono
 {
-    public enum State { Menu, InGame, Pause, HighScore, GameOver, Name, Exiting }
+    public enum State { Menu, InGame, Pause, HighScores, GameOverName, Exiting }
 
     public class Game1 : Microsoft.Xna.Framework.Game
     {
@@ -27,11 +27,7 @@ namespace FishGameMono
 
         State currentState;
 
-        HighScoreMenu highScoreMenu;
-
         public static SpriteFont font, roundedFont;
-
-        Texture2D hsbg, gameoverbg;
 
         Texture2D fisher, boat, hook;
         Texture2D sky, water, sand, coral;
@@ -55,10 +51,10 @@ namespace FishGameMono
         List<Fish> fish;
 
         public KeyboardState lastKeyState;
-        char[] name = { 'A', 'A', 'A' };
-        int nameIndex = 0;
 
         MenuScreen menu;
+        GameOverNameScreen gameOver;
+        HighScoreScreen highScores;
 
         public static Rectangle screenRect;
 
@@ -173,11 +169,12 @@ namespace FishGameMono
             hook.GetData(hookData);
 
             menu = new MenuScreen(roundedFont);
-            highScoreMenu = new HighScoreMenu();
+            gameOver = new GameOverNameScreen();
+            highScores = new HighScoreScreen();
 
-            MenuScreen.menubg = Content.Load<Texture2D>("menubg");
-            hsbg = Content.Load<Texture2D>("scorefiller");
-            gameoverbg = Content.Load<Texture2D>("gameover");
+            MenuScreen.menuBG = Content.Load<Texture2D>("menubg");
+            GameOverNameScreen.gameOverBG = Content.Load<Texture2D>("gameover");
+            HighScoreScreen.highScoreBG = Content.Load<Texture2D>("scorefiller");
 
         }
 
@@ -206,57 +203,22 @@ namespace FishGameMono
                     GameUpdate(gameTime);
                     if (lastKeyState.IsKeyUp(Keys.K) && keyState.IsKeyDown(Keys.K))
                     {
-                        currentState = State.Name;
+                        currentState = State.GameOverName;
                     }
                     break;
 
-                case(State.Name):
-
-                    if (keyState.IsKeyDown(Keys.Down) && lastKeyState.IsKeyUp(Keys.Down))
-                    {
-                        if (name[nameIndex] >= 'Z')
-                        {
-                            name[nameIndex] = 'A';
-                        }
-                        else
-                        {
-                            name[nameIndex]++;
-                        }
-                    }
-                    if (keyState.IsKeyDown(Keys.Up) && lastKeyState.IsKeyUp(Keys.Up))
-                    {
-                        if (name[nameIndex] <= 'A')
-                        {
-                            name[nameIndex] = 'Z';
-                        }
-                        else
-                        {
-                            name[nameIndex]--;
-                        }
-                    }
-                    if (keyState.IsKeyDown(Keys.Enter) && lastKeyState.IsKeyUp(Keys.Enter))
-                    {
-                        if (nameIndex < 2)
-                        {
-                            nameIndex++;
-                        }
-                        else
-                        {
-                            string finalName = new string(name);
-                            //PostHighScore(finalName, score);
-                            //highScoreMenu.GetHighScores("http://192.168.0.14/fishgame/sqlscores.php");
-                            currentState = State.HighScore;
-                        }
-                    }
+                case(State.GameOverName):
+                    gameOver.Update(gameTime);
+                    currentState = gameOver.currentState;
                     break;
 
                 case(State.Pause):
                     
                     break;
 
-                case(State.HighScore):
-                    if (keyState.IsKeyDown(Keys.X) && lastKeyState.IsKeyUp(Keys.X))
-                        currentState = State.Menu;
+                case(State.HighScores):
+                    highScores.Update(gameTime);
+                    currentState = highScores.currentState;
                     break;
 
                 case(State.Exiting):
@@ -459,21 +421,15 @@ namespace FishGameMono
                     }
                     break;
 
-                case(State.Name):
-                    spriteBatch.Draw(gameoverbg, screenRect, Color.White);
-                    string finalName = new string(name);
-                    spriteBatch.DrawString(roundedFont, finalName, new Vector2(550, 200), Color.Black);
+                case(State.GameOverName):
+                    gameOver.Draw(gameTime, spriteBatch);
                     break;
 
-                case(State.HighScore):
-                    spriteBatch.Draw(hsbg, screenRect, Color.White);
-                    highScoreMenu.Draw(spriteBatch);
+                case(State.HighScores):
+                    highScores.Draw(gameTime, spriteBatch);
                     break;
 
                 case(State.Pause):
-                    break;
-
-                case(State.GameOver):
                     break;
             }
 

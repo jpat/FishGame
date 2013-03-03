@@ -12,8 +12,8 @@ namespace FishGameMono
     class MenuScreen : GameScreen
     {
         private int selected;
-        public State currentState;
-        public static Texture2D menubg;
+        //public State currentState;
+        public static Texture2D menuBG;
 
         string[] menuItems = { "Play", "View High Scores", "Quit" };
 
@@ -56,7 +56,7 @@ namespace FishGameMono
                         currentState = State.InGame;
                         break;
                     case (1):
-                        currentState = State.HighScore;
+                        currentState = State.HighScores;
                         break;
                     case (2):
                         currentState = State.Exiting;
@@ -69,7 +69,7 @@ namespace FishGameMono
 
         public override void Draw(GameTime gameTime, SpriteBatch sb)
         {
-            sb.Draw(menubg, Game1.screenRect, Color.White);
+            sb.Draw(menuBG, Game1.screenRect, Color.White);
 
             for (int i = 0; i < menuItems.Length; i++)
             {

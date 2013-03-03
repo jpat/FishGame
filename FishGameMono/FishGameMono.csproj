@@ -131,6 +131,7 @@
     <Compile Include="FishData.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameObject.cs" />
+    <Compile Include="Screens\GameOverScreen.cs" />
     <Compile Include="Screens\GameScreen.cs" />
     <Compile Include="HighScoreMenu.cs" />
     <Compile Include="Program.cs" />

@@ -10,6 +10,7 @@ namespace FishGameMono
 {
     abstract class GameScreen
     {
+        public State currentState;
         public abstract void Update(GameTime gameTime);
         public abstract void Draw(GameTime gameTime, SpriteBatch sb);
     }
