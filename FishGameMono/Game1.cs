@@ -106,43 +106,44 @@ namespace FishGameMono
             font = Content.Load<SpriteFont>("font");
             roundedFont = Content.Load<SpriteFont>("roundedFont");
 
-            Fish.textures = new Dictionary<Fish.FishType, Texture2D[]>
+            
+            Fish.sprites = new Dictionary<Fish.FishType, Sprite>
             {
                 {
-                    Fish.FishType.jelly, new Texture2D[3]
+                    Fish.FishType.jelly, new Sprite(new[]
                                                 {
                                                     Content.Load<Texture2D>("jelly"),
                                                     Content.Load<Texture2D>("jelly2a"),
                                                     Content.Load<Texture2D>("jelly2b")
-                                                }
+                                                })
                 },
                 {
-                    Fish.FishType.plain, new Texture2D[2]
+                    Fish.FishType.plain, new Sprite(new[]
                                                 {
                                                     Content.Load<Texture2D>("plainfish"),
                                                     Content.Load<Texture2D>("plainfish2b"),
-                                                }
+                                                })
                 },
                 {
-                    Fish.FishType.pointy, new Texture2D[2]
+                    Fish.FishType.pointy, new Sprite(new[]
                                                 {
                                                     Content.Load<Texture2D>("pointyfish"),
                                                     Content.Load<Texture2D>("pointyfish2"),
-                                                }
+                                                })
                 },
                 {
-                    Fish.FishType.boot, new Texture2D[1]
+                    Fish.FishType.boot, new Sprite(new[]
                                             {
                                                 Content.Load<Texture2D>("boot")
-                                            }
+                                            })
                 },
                 {
-                    Fish.FishType.crab, new Texture2D[3]
+                    Fish.FishType.crab, new Sprite(new[]
                                                 {
                                                     Content.Load<Texture2D>("crab"),
                                                     Content.Load<Texture2D>("crab2"),
                                                     Content.Load<Texture2D>("crab3"),
-                                                }
+                                                })
                 }
             };
 
@@ -293,7 +294,7 @@ namespace FishGameMono
             foreach (Fish f in fish)
             {
                 f.Update(gameTime);
-                if (BoxCollision(f.location, f.text.Width, f.text.Height, f.scale))
+                if (BoxCollision(f.location, f.rect.Width, f.rect.Height, f.scale))
                 {
                     /*if (IntersectPixels(new Rectangle(hookX, hookY, (int)(hook.Width * hookScale), (int)(hook.Height * hookScale)), hookData,
                         new Rectangle((int)f.location.X, (int)f.location.Y, (int)(f.text.Width * f.scale), (int)(f.text.Height * f.scale)), f.data.colorData[0]))

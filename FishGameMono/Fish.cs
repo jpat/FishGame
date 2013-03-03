@@ -11,8 +11,10 @@ namespace FishGameMono
 {
     class Fish : GameObject
     {
+        public int ScoreValue { get; set; }
+
         public enum FishType { jelly, pointy, plain, crab, boot };
-        public static Dictionary<FishType, Texture2D[]> textures;
+        public static Dictionary<FishType, Sprite> sprites;
 
         public Rectangle rect;
 
@@ -23,12 +25,8 @@ namespace FishGameMono
 
         public bool isCaught;
 
-        public Texture2D text;
-
         public float scale;
         public float rotation = 0.0f;
-
-        public FishData data;
 
         public Fish(Vector2 loc, Vector2 vel, FishType f, float s)
         {
@@ -37,17 +35,16 @@ namespace FishGameMono
             this.scale = s;
             this.isCaught = false;
             this.type = f;
-            this.text = textures[f][0];
+            
+            var text = sprites[f].GetCurrentFrame(new GameTime());
 
             rect = new Rectangle((int)location.X, (int)location.Y, text.Width, text.Height);
-
-            data = new FishData(textures[f]);
 
         }
 
         public override void Update(GameTime gameTime)
         {
-            rect = new Rectangle((int)location.X, (int)location.Y, text.Width, text.Height);
+            rect = new Rectangle((int)location.X, (int)location.Y, rect.Width, rect.Height);
             location += velocity;
 
             if (this.isCaught == true)
@@ -78,29 +75,8 @@ namespace FishGameMono
 
         public override void Draw(GameTime gameTime, SpriteBatch sb)
         {
-            Texture2D currentTexture;
-            if (textures[type].Count() == 2)
-            {
-                if (gameTime.TotalGameTime.Milliseconds % 1000 < 500)
-                    currentTexture = textures[type][0];
-                else
-                    currentTexture = textures[type][1];
-            }
-
-            else if (textures[type].Count() == 3)
-            {
-                if (gameTime.TotalGameTime.Milliseconds % 1000 < 332) //332
-                    currentTexture = textures[type][0];
-                else if (gameTime.TotalGameTime.Milliseconds % 1000 < 665) //665
-                    currentTexture = textures[type][1];
-                else
-                    currentTexture = textures[type][2];
-            }
-
-            else currentTexture = text;
-
-            text = currentTexture;
-            sb.Draw(currentTexture, location, null, Color.White, this.rotation, new Vector2(text.Width * 0.5f, text.Height * 0.5f), scale, SpriteEffects.None, 0);
+            var texture = sprites[this.type].GetCurrentFrame(gameTime);
+            sb.Draw(texture, location, null, Color.White, this.rotation, new Vector2(texture.Width * 0.5f, texture.Height * 0.5f), scale, SpriteEffects.None, 0);
         }
     }
 
