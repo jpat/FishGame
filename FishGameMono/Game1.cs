@@ -38,17 +38,10 @@ namespace FishGameMono
         Texture2D sky, water, sand, coral;
         Texture2D dot, pixel;
 
-        public Texture2D jelly1, jelly2, jelly3;
-        public Texture2D plain1, plain2;
-        public Texture2D pointy1, pointy2;
-        public Texture2D boot1;
-        public Texture2D crab1, crab2, crab3;
-
-        public Texture2D[] smallkelp, bigkelp;
+        Sprite smallkelp, bigkelp;
 
         Color[] hookData;
 
-        
         int boatX;
         int lineLength;
         Vector2 lineOffset, hookOffset;
@@ -147,16 +140,20 @@ namespace FishGameMono
                 }
             };
 
-            smallkelp = new Texture2D[4] { Content.Load<Texture2D>("kelp1"), 
+            smallkelp = new Sprite(new[] 
+            { 
+                Content.Load<Texture2D>("kelp1"), 
                 Content.Load<Texture2D>("kelp2"), 
                 Content.Load <Texture2D>("kelp2b"), 
                 Content.Load<Texture2D>("kelp3") 
-            };
+            });
 
-            bigkelp = new Texture2D[3] { Content.Load<Texture2D>("bigkelp1"), 
+            bigkelp = new Sprite(new[] 
+            { 
+                Content.Load<Texture2D>("bigkelp1"), 
                 Content.Load<Texture2D>("bigkelp2"), 
                 Content.Load<Texture2D>("bigkelp3") 
-            };
+            });
 
             fisher = Content.Load<Texture2D>("fisher");
             boat = Content.Load<Texture2D>("ship");
@@ -494,7 +491,7 @@ namespace FishGameMono
             base.Draw(gameTime);
         }
 
-        public void DrawSeaweed(GameTime gameTime)
+        private void DrawSeaweed(GameTime gameTime)
         {
             DrawSeaweed_Helper(gameTime, bigkelp, new Vector2(570, 380), 0.8f, 0.5f);
             DrawSeaweed_Helper(gameTime, smallkelp, new Vector2(150, 380), 0.8f, 0.5f);
@@ -502,12 +499,10 @@ namespace FishGameMono
             DrawSeaweed_Helper(gameTime, smallkelp, new Vector2(140, 420), 0.8f, 0.5f);  
         }
 
-        public void DrawSeaweed_Helper(GameTime gameTime, Texture2D[] texts, Vector2 location, float alpha, float scale)
+        private void DrawSeaweed_Helper(GameTime gameTime, Sprite sprite, Vector2 location, float alpha, float scale)
         {
-            int numMS = 1000 / texts.Length;
-            int textIndex = (gameTime.TotalGameTime.Milliseconds / numMS) % (texts.Length);
-            
-            spriteBatch.Draw(texts[textIndex], location, null, new Color(1.0f, 1.0f, 1.0f, alpha), 0.0f, new Vector2(0,0), scale, SpriteEffects.None, 0);
+            var texture = sprite.GetCurrentFrame(gameTime);
+            spriteBatch.Draw(texture, location, null, new Color(1.0f, 1.0f, 1.0f, alpha), 0.0f, new Vector2(0,0), scale, SpriteEffects.None, 0);
         }
 
         private bool ShouldCreateNewFish()
