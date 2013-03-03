@@ -31,9 +31,7 @@ namespace FishGameMono
 
         Texture2D fisher, boat, hook;
         Texture2D sky, water, sand, coral;
-        Texture2D dot, pixel;
-
-        Sprite smallkelp, bigkelp;
+        Texture2D pixel;
 
         Color[] hookData;
 
@@ -49,6 +47,7 @@ namespace FishGameMono
         public float rotDirection = 1;
 
         List<Fish> fish;
+        List<Kelp> kelp;
 
         public KeyboardState lastKeyState;
 
@@ -86,6 +85,14 @@ namespace FishGameMono
             isLowering = false;
             lineFull = false;
             fish = new List<Fish>();
+            kelp = new List<Kelp>
+            {
+                new Kelp(Kelp.KelpType.Multi, new Vector2(570, 380), 0.8f, 0.5f),
+                new Kelp(Kelp.KelpType.Single, new Vector2(150, 380), 0.8f, 0.5f),
+                new Kelp(Kelp.KelpType.Single, new Vector2(160, 390), 0.8f, 0.5f),
+                new Kelp(Kelp.KelpType.Single, new Vector2(140, 420), 0.8f, 0.5f),
+            };
+            
 
             base.Initialize();
         }
@@ -138,21 +145,27 @@ namespace FishGameMono
                                                 })
                 }
             };
+            Kelp.sprites = new Dictionary<Kelp.KelpType, Sprite>
+            {   
+                {
+                    Kelp.KelpType.Single, new Sprite(new[] 
+                                                { 
+                                                    Content.Load<Texture2D>("kelp1"), 
+                                                    Content.Load<Texture2D>("kelp2"), 
+                                                    Content.Load <Texture2D>("kelp2b"), 
+                                                    Content.Load<Texture2D>("kelp3"), 
+                                                })
+                },
 
-            smallkelp = new Sprite(new[] 
-            { 
-                Content.Load<Texture2D>("kelp1"), 
-                Content.Load<Texture2D>("kelp2"), 
-                Content.Load <Texture2D>("kelp2b"), 
-                Content.Load<Texture2D>("kelp3") 
-            });
-
-            bigkelp = new Sprite(new[] 
-            { 
-                Content.Load<Texture2D>("bigkelp1"), 
-                Content.Load<Texture2D>("bigkelp2"), 
-                Content.Load<Texture2D>("bigkelp3") 
-            });
+                {
+                    Kelp.KelpType.Multi, new Sprite(new[]
+                                                {
+                                                    Content.Load<Texture2D>("bigkelp1"),
+                                                    Content.Load<Texture2D>("bigkelp2"),
+                                                    Content.Load<Texture2D>("bigkelp3"),
+                                                })
+                }
+            };
 
             fisher = Content.Load<Texture2D>("fisher");
             boat = Content.Load<Texture2D>("ship");
@@ -162,7 +175,6 @@ namespace FishGameMono
             coral = Content.Load<Texture2D>("coral");
             hook = Content.Load<Texture2D>("hook");
 
-            dot = Content.Load<Texture2D>("dot");
             pixel = Content.Load<Texture2D>("pixel");
 
             hookData = new Color[hook.Width * hook.Height];
@@ -413,7 +425,10 @@ namespace FishGameMono
                     spriteBatch.Draw(pixel, new Vector2(boatX + lineOffset.X, lineOffset.Y), null, Color.White, 0.0f, new Vector2(0, 0), new Vector2(1, lineLength), SpriteEffects.None, 0);
                     spriteBatch.Draw(hook, new Vector2(hookX, hookY), null, Color.White, 0.0f, new Vector2(0, 0), hookScale, SpriteEffects.None, 0);
 
-                    DrawSeaweed(gameTime);
+                    foreach (Kelp k in kelp)
+                    {
+                        k.Draw(gameTime, spriteBatch);
+                    }
 
                     foreach (Fish f in fish)
                     {
@@ -435,20 +450,6 @@ namespace FishGameMono
 
             spriteBatch.End();
             base.Draw(gameTime);
-        }
-
-        private void DrawSeaweed(GameTime gameTime)
-        {
-            DrawSeaweed_Helper(gameTime, bigkelp, new Vector2(570, 380), 0.8f, 0.5f);
-            DrawSeaweed_Helper(gameTime, smallkelp, new Vector2(150, 380), 0.8f, 0.5f);
-            DrawSeaweed_Helper(gameTime, smallkelp, new Vector2(160, 380), 0.8f, 0.5f);
-            DrawSeaweed_Helper(gameTime, smallkelp, new Vector2(140, 420), 0.8f, 0.5f);  
-        }
-
-        private void DrawSeaweed_Helper(GameTime gameTime, Sprite sprite, Vector2 location, float alpha, float scale)
-        {
-            var texture = sprite.GetCurrentFrame(gameTime);
-            spriteBatch.Draw(texture, location, null, new Color(1.0f, 1.0f, 1.0f, alpha), 0.0f, new Vector2(0,0), scale, SpriteEffects.None, 0);
         }
 
         private bool ShouldCreateNewFish()
