@@ -101,12 +101,17 @@ namespace FishGameMono
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(sky, new Vector2(0, -100), Color.White);
+            //spriteBatch.Draw(sky, new Vector2(0, -100), Color.White);
+            spriteBatch.Draw(sky, new Rectangle(0, 0, (int)Game1.screenWidth, (int)(Game1.screenHeight * 0.3f)), Color.White);
             spriteBatch.DrawString(Game1.roundedFont, "Score: " + score, new Vector2(10.0f, 25.0f), Color.DarkMagenta);
 
-            spriteBatch.Draw(water, new Vector2(0, 200), Color.White);
-            spriteBatch.Draw(coral, new Vector2(0, 200), new Color(200, 200, 200, 200));
-            spriteBatch.Draw(sand, new Vector2(0, Game1.screenHeight - sand.Height), Color.White);
+            //spriteBatch.Draw(water, new Vector2(0, 200), Color.White);
+            spriteBatch.Draw(water, new Rectangle(0, (int)(Game1.screenHeight * 0.3f), Game1.screenWidth, Game1.screenHeight), Color.White);
+
+            //spriteBatch.Draw(coral, new Vector2(0, 200), new Color(200, 200, 200, 200));
+            spriteBatch.Draw(coral, new Rectangle(0, (int)(Game1.screenHeight * 0.5f), Game1.screenWidth, (int)(Game1.screenHeight * 0.5f)), Color.White);
+            
+            //spriteBatch.Draw(sand, new Vector2(0, Game1.screenHeight - sand.Height), Color.White);
 
             boat.Draw(gameTime, spriteBatch);
 

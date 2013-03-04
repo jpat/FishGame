@@ -17,13 +17,13 @@ namespace FishGameMono
 
         string[] menuItems = { "Play", "View High Scores", "Quit" };
 
-        Color normalColor = Color.White;
+        Color normalColor = Color.MediumSeaGreen;
         Color hilightColor = Color.Black;
         Color currentColor;
         SpriteFont font;
         KeyboardState lastKeyState;
-        int xOffset = 535;
-        int yOffset = 215;
+        int xOffset = (int)(Game1.screenWidth * 0.57f);
+        int yOffset = (int)(Game1.screenHeight * 0.45f);
 
         public MenuScreen(SpriteFont _font)
         {

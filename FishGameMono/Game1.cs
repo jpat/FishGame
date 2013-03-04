@@ -20,8 +20,10 @@ namespace FishGameMono
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public static int screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-        public static int screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+        Matrix spriteScale;
+
+        public static int screenWidth;// = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+        public static int screenHeight;// = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
         public static Rectangle screenRect;
 
         State currentState;
@@ -40,10 +42,12 @@ namespace FishGameMono
             graphics = new GraphicsDeviceManager(this);
             //screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             //screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            graphics.IsFullScreen = true;
             Content.RootDirectory = "Content";
-
-            graphics.PreferredBackBufferHeight = screenHeight;
-            graphics.PreferredBackBufferWidth = screenWidth;
+            graphics.PreferredBackBufferHeight = 768;
+            graphics.PreferredBackBufferWidth = 1366;
+            screenWidth = 1366;
+            screenHeight = 768;
         }
 
         protected override void Initialize()
@@ -58,8 +62,16 @@ namespace FishGameMono
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+
+            /*float screenscale =
+            (float)graphics.GraphicsDevice.Viewport.Width / 800f;
+            // Create the scale transform for Draw. 
+            // Do not scale the sprite depth (Z=1).
+            spriteScale = Matrix.CreateScale(screenscale, screenscale, 1);*/
+
+
             font = Content.Load<SpriteFont>("font");
-            roundedFont = Content.Load<SpriteFont>("roundedFont");
+            roundedFont = Content.Load<SpriteFont>("BigRoundFont");
             
             Fish.sprites = new Dictionary<Fish.FishType, Sprite>
             {
@@ -127,17 +139,17 @@ namespace FishGameMono
             BoatFisherHook.hookText = Content.Load<Texture2D>("hook_m");
             BoatFisherHook.lineText = Content.Load<Texture2D>("pixel");
             
-            InGameScreen.sky = Content.Load<Texture2D>("sky");
-            InGameScreen.water = Content.Load<Texture2D>("water");
-            InGameScreen.sand = Content.Load<Texture2D>("sand1024");
-            InGameScreen.coral = Content.Load<Texture2D>("coral1024");
+            InGameScreen.sky = Content.Load<Texture2D>("sky_lg");
+            InGameScreen.water = Content.Load<Texture2D>("sea_lg");
+            InGameScreen.sand = Content.Load<Texture2D>("sand1366");
+            InGameScreen.coral = Content.Load<Texture2D>("coral2_lg");
 
             menu = new MenuScreen(roundedFont);
             gameOver = new GameOverNameScreen();
             highScores = new HighScoreScreen();
             inGameScreen = new InGameScreen();
 
-            MenuScreen.menuBG = Content.Load<Texture2D>("menubg");
+            MenuScreen.menuBG = Content.Load<Texture2D>("menubg_lg");
             GameOverNameScreen.gameOverBG = Content.Load<Texture2D>("gameover");
             HighScoreScreen.highScoreBG = Content.Load<Texture2D>("scorefiller");
 
@@ -231,6 +243,7 @@ namespace FishGameMono
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
+            //spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, spriteScale);
 
             switch(currentState){
                 case(State.Menu):
