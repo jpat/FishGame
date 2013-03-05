@@ -63,7 +63,7 @@ namespace FishGameMono
         {
             spriteBatch.Draw(gameOverBG, Game1.screenRect, Color.White);
             string finalName = new string(name);
-            spriteBatch.DrawString(Game1.roundedFont, finalName, new Vector2(550, 200), Color.Black);
+            spriteBatch.DrawString(Game1.bigRoundedFont, finalName, new Vector2((int)(Game1.screenWidth * 0.70f), (int)(Game1.screenHeight * 0.35f)), Color.Black);
         }
 
         

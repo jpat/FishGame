@@ -28,7 +28,7 @@ namespace FishGameMono
 
         State currentState;
 
-        public static SpriteFont font, roundedFont;
+        public static SpriteFont font, roundedFont, bigRoundedFont;
 
         public KeyboardState lastKeyState;
 
@@ -71,7 +71,8 @@ namespace FishGameMono
 
 
             font = Content.Load<SpriteFont>("font");
-            roundedFont = Content.Load<SpriteFont>("BigRoundFont");
+            roundedFont = Content.Load<SpriteFont>("roundedfont"); 
+            bigRoundedFont = Content.Load<SpriteFont>("BigRoundFont");
             
             Fish.sprites = new Dictionary<Fish.FishType, Sprite>
             {
@@ -106,9 +107,9 @@ namespace FishGameMono
                 {
                     Fish.FishType.Crab, new Sprite(new[]
                                                 {
-                                                    Content.Load<Texture2D>("crab"),
-                                                    Content.Load<Texture2D>("crab2"),
-                                                    Content.Load<Texture2D>("crab3"),
+                                                    Content.Load<Texture2D>("crab_lg"),
+                                                    Content.Load<Texture2D>("crab2_lg"),
+                                                    Content.Load<Texture2D>("crab3_lg"),
                                                 })
                 }
             };
@@ -144,14 +145,14 @@ namespace FishGameMono
             InGameScreen.sand = Content.Load<Texture2D>("sand1366");
             InGameScreen.coral = Content.Load<Texture2D>("coral2_lg");
 
-            menu = new MenuScreen(roundedFont);
+            menu = new MenuScreen(bigRoundedFont);
             gameOver = new GameOverNameScreen();
             highScores = new HighScoreScreen();
             inGameScreen = new InGameScreen();
 
             MenuScreen.menuBG = Content.Load<Texture2D>("menubg_lg");
-            GameOverNameScreen.gameOverBG = Content.Load<Texture2D>("gameover");
-            HighScoreScreen.highScoreBG = Content.Load<Texture2D>("scorefiller");
+            GameOverNameScreen.gameOverBG = Content.Load<Texture2D>("gameover2");
+            HighScoreScreen.highScoreBG = Content.Load<Texture2D>("highscore_lg");
 
         }
 

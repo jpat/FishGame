@@ -14,7 +14,8 @@ namespace FishGameMono
         public Dictionary<string, int> Scores;
         private KeyboardState lastKeyState;
         public static Texture2D highScoreBG;
-        private int yOffset = 200;
+        private int xOffset = (int)(Game1.screenWidth * 0.4);
+        private int yOffset = (int)(Game1.screenHeight * 0.4);
 
 
         public HighScoreScreen()
@@ -50,7 +51,7 @@ namespace FishGameMono
                 string s = v.Key + " " + v.Value;
                 Vector2 stringSize = Game1.roundedFont.MeasureString(s);
 
-                spriteBatch.DrawString(Game1.roundedFont, v.Key + " " + v.Value, new Vector2(100, yOffset + i * stringSize.Y), Color.White);
+                spriteBatch.DrawString(Game1.roundedFont, v.Key + " " + v.Value, new Vector2(xOffset, yOffset + i * stringSize.Y), Color.White);
                 i++;
             }
         }

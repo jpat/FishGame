@@ -65,14 +65,14 @@ namespace FishGameMono
             else
                 type = Fish.FishType.Crab;
 
-            int randomY = r.Next(300,500);
+            int randomY = r.Next((int)(Game1.screenHeight * 0.4f), (int)(Game1.screenHeight * 0.8f));
             int vel;
 
-            vel = (type != FishType.Boot) ? r.Next(1, 4) : 1;
+            vel = (type != FishType.Boot) ? r.Next(2, 6) : 2;
 
-            yLoc = (type != Fish.FishType.Crab) ? randomY : 550;
+            yLoc = (type != Fish.FishType.Crab) ? randomY : (int)(Game1.screenHeight * 0.9f);
 
-            return new Fish(new Vector2(900, yLoc), new Vector2(-vel, 0), type, 0.5f);
+            return new Fish(new Vector2(Game1.screenWidth + 100, yLoc), new Vector2(-vel, 0), type, 0.5f);
         }
 
         public override void Update(GameTime gameTime)

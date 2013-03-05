@@ -103,7 +103,7 @@ namespace FishGameMono
         {
             //spriteBatch.Draw(sky, new Vector2(0, -100), Color.White);
             spriteBatch.Draw(sky, new Rectangle(0, 0, (int)Game1.screenWidth, (int)(Game1.screenHeight * 0.3f)), Color.White);
-            spriteBatch.DrawString(Game1.roundedFont, "Score: " + score, new Vector2(10.0f, 25.0f), Color.DarkMagenta);
+            spriteBatch.DrawString(Game1.bigRoundedFont, "Score: " + score, new Vector2(10.0f, 25.0f), Color.DarkMagenta);
 
             //spriteBatch.Draw(water, new Vector2(0, 200), Color.White);
             spriteBatch.Draw(water, new Rectangle(0, (int)(Game1.screenHeight * 0.3f), Game1.screenWidth, Game1.screenHeight), Color.White);
